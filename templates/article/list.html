@@ -1,0 +1,47 @@
+{# ------------------------------------------------------- #}
+
+{# LIST VIEW OF ALL article #}
+
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+
+{# ------------------------------------------------------- #}
+
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+{% extends "templates/partials/base.html" %}
+
+{# This sets our page <title>. It will append article to the site title defined in base.html #}
+{% block title %}{% parent %} blog{% endblock %}
+
+{% block content %}
+<div class="container">
+  <article>
+    <div class="date">
+      {% set last = cms.article|last %}
+      Last update {{ last.publish_date|date('M d, Y.') }}
+    </div>
+    <h1>Blog</h1>
+    <div class="deck deck-smaller wy-text-center">
+      <p>Recieve updates to this blog through <a href="/rss.xml">RSS</a> or <a href="http://www.twitter.com/{{ cms.aboutme.twitter }}/">Twitter</a>.</p>
+    </div>
+  </article>
+  <hr>
+
+  {% set editorial = cms.article %}
+  {% set editorial = editorial|sort('publish_date', true) %}
+  {% set editorial = paginate(editorial, 10) %}
+
+  <ul class="home-feed js-paginate" data-next-page="{{ getPageUrl(getCurPage() + 1) }}" data-max-page="{{ getPageUrl(getMaxPage()) }}">
+    {% for item in editorial %}
+      {% include "templates/partials/li_article.html" %}
+    {% endfor %}
+  </ul>
+  <div id="load-more-spinner" class="wy-spinner" style="display: none;"></div>
+</div>
+
+
+{% endblock %}

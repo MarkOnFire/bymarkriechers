@@ -1,0 +1,77 @@
+{# ------------------------------------------------------- #}
+{# ONE OFF VIEW aboutme #}
+{# This page can use any data from http:localhost:2000/cms/#/form/aboutme/ #}
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+{# ------------------------------------------------------- #}
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+{% extends "templates/partials/base.html" %}
+{# This sets our page <title>. It will append this aboutme's name to the site title defined in base.html #}
+{% block title %}{% parent %} - {{ cms.aboutme.name }}{% endblock %}
+{% block content %}
+  <article>
+    <h1>More about {{ cms.aboutme.name }}</h1>
+    <div class="deck deck-smaller wy-text-center">
+     <p>I hail from <strong>{{ cms.aboutme.hometown }}</strong>. Send me an <a href="mailto:{{ cms.aboutme.email }}">email</a>.</p>
+    </div>
+    <img src="{{ cms.aboutme.bio_picture|imageSize(700) }}">
+    <ul class="social">
+      {% if cms.aboutme.facebook %}
+        <li><a href="http://www.facebook.com/{{ cms.aboutme.facebook }}" class="fa fa-facebook"></a></li>
+      {% endif %}
+      {% if cms.aboutme.github %}
+        <li><a href="http://www.github.com/{{ cms.aboutme.github }}" class="fa fa-github"></a></li>
+      {% endif %}
+      {% if cms.aboutme.instagram %}
+        <li><a href="http://www.instagram.com/{{ cms.aboutme.instagram }}" class="fa fa-instagram"></a></li>
+      {% endif %}
+      {% if cms.aboutme.reddit %}
+        <li><a href="http://www.reddit.com/u/{{ cms.aboutme.reddit }}" class="fa fa-reddit"></a></li>
+      {% endif %}
+      {% if cms.aboutme.twitter %}
+        <li><a href="http://www.twitter.com/{{ cms.aboutme.twitter }}" class="fa fa-twitter"></a></li>
+      {% endif %}
+      {% if cms.aboutme.steam %}
+        <li><a href="http://www.steamcommunity.com/id/{{ cms.aboutme.steam }}/" class="fa fa-steam"></a></li>
+      {% endif %}
+      {% if cms.aboutme.vimeo %}
+        <li><a href="http://www.vimeo.com/{{ cms.aboutme.vimeo }}" class="fa fa-vimeo-square"></a></li>
+      {% endif %}
+      {% if cms.aboutme.youtube %}
+        <li><a href="http://www.youtube.com/user/{{ cms.aboutme.youtube }}" class="fa fa-youtube-play"></a></li>
+      {% endif %}
+    </ul>
+    <hr>
+    {{ cms.aboutme.bio|markdown }}
+
+    {# If at least one piece of notable work exists, show all this resume stuff.#}
+    {% if cms.aboutme.notable_work[0] %}
+      <hr>
+      <h2>Some of my work</h2>
+      {{ cms.aboutme.resume_intro|markdown }}
+      {% if cms.aboutme.formal_resume %}
+        <a href="{{ cms.aboutme.formal_resume.url }}" class="btn btn-neutral">Download my resume</a>
+      {% endif %}
+      <hr>
+      <ul class="work">
+        {% for row in cms.aboutme.notable_work %}
+          <li>
+            <h3>
+              {% if row.url %}
+                <a href="{{ row.url }}">{{ row.name }}</a>
+              {% else %}
+                {{ row.name }}
+              {% endif %}
+              <span class="time-period">{{ row.time_period }}</span>
+            </h3>
+            <p class="role">{{ row.role }}</p>
+            {{ row.description|markdown }}
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </article>
+{% endblock %}

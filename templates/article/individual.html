@@ -1,0 +1,74 @@
+{# ------------------------------------------------------- #}
+{# INDIVIDUAL VIEW FOR EACH article #}
+{# This page can use any data from http:localhost:2000/cms/#/form/article/ #}
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+{# ------------------------------------------------------- #}
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+{% extends "templates/partials/base.html" %}
+{# This sets our page <title>. It will append this article's name to the site title defined in base.html #}
+{% block title %}{{ item.name }}{% endblock %}
+{% block description %}{{ item.deck|markdown|striptags }}{% endblock %}
+
+{% block content %}
+
+  {% set next = nextItem(item, 'publish_date') %}
+  {% set prev = prevItem(item, 'publish_date') %}
+  {% if next %}
+    <a href="{{ url(next)}}" class="next-item">
+      <span class="fa fa-angle-right"></span>
+      <div class="item-head">Next article</div>
+      <div class="item-name">{{ next.name }}</div>
+    </a>
+  {% endif %}
+  {% if prev %}
+    <a href="{{ url(prev)}}" class="prev-item">
+      <span class="fa fa-angle-left"></span>
+      <div class="item-head">Previous article</div>
+      <div class="item-name">{{ prev.name }}</div>
+    </a>
+  {% endif %}
+
+  {# BIG HERO STYLE HEADER #}
+  {% if item.optional_big_hero_image %}
+  <div class="big-hero" style="background-image: url({{ item.optional_big_hero_image|imageSize(1200) }});">
+    <div class="container">
+      <div class="date">{{ item.publish_date|date('M d Y') }}</div>
+      <h1>{{ item.name }}</h1>
+      <div class="deck">{{ item.deck|markdown }}</div>
+    </div>
+  </div>
+  {% endif %}
+
+  <article>
+    {# REGULAR HEADER #}
+    {% if not item.optional_big_hero_image %}
+      <div class="date">{{ item.publish_date|date('M d Y') }}</div>
+      <h1>{{ item.name }}</h1>
+      <div class="deck">{{ item.deck|markdown }}</div>
+      <hr/>
+    {% endif %}
+
+    {{ item.body|markdown }}
+    <hr>
+    <p>
+      Enjoyed this post? Let me know on <a href="http://www.twitter.com/{{ cms.twitter.name }}">twitter</a>
+      or grab some <a href="/rss.xml">RSS</a>.
+    </p>
+  </article>
+
+{% endblock %}
+
+{% block scripts_extra %}
+  {% if item.optional_big_hero_image %}
+    <script>
+      BackgroundCheck.init({
+       targets: '.big-hero',
+       images: '.big-hero'
+      });
+    </script>
+  {% endif %}
+{% endblock %}

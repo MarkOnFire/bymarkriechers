@@ -1,0 +1,48 @@
+{# ------------------------------------------------------- #}
+
+{# LIST VIEW OF ALL gallery #}
+
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+
+{# ------------------------------------------------------- #}
+
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+{% extends "templates/partials/base.html" %}
+
+{% block title %}{% parent %} photos{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+    <article>
+      <div class="date">
+        {% set last = cms.gallery|last %}
+        Last update {{ last.publish_date|date('M d, Y.') }}
+      </div>
+      <h1>Photos</h1>
+      <div class="deck deck-smaller wy-text-center">
+        <p>Follow me on <a href="http://www.twitter.com/{{ cms.aboutme.twitter }}/">Twitter</a> for updates.</p>
+      </div>
+      <hr>
+    </article>
+
+
+  {% set editorial = cms.gallery %}
+  {% set editorial = editorial|sort('publish_date', true) %}
+  {% set editorial = paginate(editorial, 10) %}
+
+    <ul class="home-feed js-paginate" data-next-page="{{ getPageUrl(getCurPage() + 1) }}" data-max-page="{{ getPageUrl(getMaxPage()) }}">
+      {% for item in editorial %}
+        {% include "templates/partials/li_gallery.html" %}
+      {% endfor %}
+    </ul>
+    <div id="js-spinner" class="wy-spinner" style="display: none;"></div>
+  </div>
+
+
+{% endblock %}

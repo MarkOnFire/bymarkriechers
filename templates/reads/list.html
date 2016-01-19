@@ -14,23 +14,23 @@
 {# http://www.webhook.com/docs/template-inheritance-blocks/ #}
 {% extends "templates/partials/base.html" %}
 
-{% block title %}{% parent %} links of note{% endblock %}
+{% block title %}{% parent %} clippings{% endblock %}
 
 {% block content %}
   <div class="container">
     <article>
       <div class="date">
-        {% set last = cms.link|last %}
+        {% set last = cms.reads|last %}
         Last update {{ last.publish_date|date('M d, Y.') }}
       </div>
-      <h1>Links of note</h1>
+      <h1>Clippings</h1>
       <div class="deck deck-smaller wy-text-center">
-        <p>Consider it my own personal web-ring.</p>
+        <p>Highlights from my portfolio of work.</p>
       </div>
     </article>
     <hr>
 
-    {% set editorial = cms.link %}
+    {% set editorial = cms.reads %}
     {% set editorial = editorial|sort('publish_date', true) %}
     {% set editorial = paginate(editorial, 10) %}
 
@@ -42,4 +42,3 @@
     <div id="js-spinner" class="wy-spinner" style="display: none;"></div>
   </div>
 {% endblock %}
-

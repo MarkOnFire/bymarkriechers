@@ -15,36 +15,16 @@
 
   <hr>
 
+
   {# MERGE A BUNCH OF CMS CONTENT TOGETHER INTO ONE FEED #}
-  {% set editorial = merge(cms.article, cms.gallery, cms.link, cms.video) %}
+  {% set editorial = merge(cms.article, cms.gallery, cms.reads, cms.video, cms.interview) %}
   {% set editorial = editorial|sort('publish_date', true) %}
   {# INFINITE SCROLL BY 10 #}
   {% set editorial = paginate(editorial, 10) %}
 
-  <ul class="home-feed js-paginate" data-next-page="{{ getPageUrl(getCurPage() + 1) }}" data-max-page="{{ getPageUrl(getMaxPage()) }}" data-remove-first="true">
 
-    {# TWITTER #}
-    {# TWITTER #}
-    {# TWITTER #}
-    {% if !cms.twitter.text && cms.twitter.name %}
-      <li class="twitter twitter-iframe">
-        <a class="twitter-timeline" href="https://twitter.com/{{ cms.twitter.name }}" data-widget-id="443912644651528192" data-screen-name="{{ cms.twitter.name }}" data-show-replies="false" data-tweet-limit="1" data-chrome="noheader nofooter noborders noscrollbar transparent">
-        Tweets by @{{ cms.twitter.name }}
-        </a>
-        <script>window.twttr=(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);t._e=[];t.ready=function(f){t._e.push(f);};return t;}(document,"script","twitter-wjs"));</script>
-      </li>
-    {% elseif cms.twitter.text %}
-      <li class="twitter">
-        <a href="http://www.twitter.com/{{ cms.twitter.name }}" class="twitter-avatar">
-          <img src="{{ cms.twitter.user_profile_image_url }}">
-        </a>
-        <div class="twitter-message">
-          <span class="twitter-name"><a href="http://www.twitter.com/{{ cms.twitter.name }}">@{{ cms.twitter.name }}</a><span class="fa fa-twitter"></span></span>
-          <p class="js-tweet-body" data-linkify="this">{{ cms.twitter.text|safe }}</p>
-          <p class="twitter-date">My last tweet published <a href="{{ cms.twitter.url }}" id="tweetTime" data-tweet-time="{{ cms.twitter.created_at }}">{{ cms.twitter.created_at|date('M d, Y. g:i a') }}</a>.</p>
-        </div>
-      </li>
-    {% endif %}
+
+  <ul class="home-feed js-paginate" data-next-page="{{ getPageUrl(getCurPage() + 1) }}" data-max-page="{{ getPageUrl(getMaxPage()) }}" data-remove-first="true">
 
     {% for item in editorial %}
       {# GALLERY #}
@@ -57,10 +37,15 @@
       {# ARTICLE #}
       {% elseif item._type == "article" %}
         {% include "templates/partials/li_article.html" %}
+      {# INTERVIEW #}
+      {# INTERVIEW #}
+      {# INTERVIEW #}
+        {% elseif item._type == "interview" %}
+      {% include "templates/partials/li_interview.html" %}
       {# LINK #}
       {# LINK #}
       {# LINK #}
-      {% elseif item._type == "link" %}
+      {% elseif item._type == "reads" %}
         {% include "templates/partials/li_link.html" %}
       {# VIDEO #}
       {# VIDEO #}
@@ -70,8 +55,6 @@
       {% endif %}
     {% endfor %}
   </ul>
-  <div id="js-spinner" class="wy-spinner" style="display: none;"></div>
-</div>
-{% endblock %}
+
 
 {% block scripts_extra %}{% endblock %}

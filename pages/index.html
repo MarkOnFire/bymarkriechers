@@ -15,13 +15,45 @@
 
   <hr>
 
+
   {# MERGE A BUNCH OF CMS CONTENT TOGETHER INTO ONE FEED #}
-  {% set editorial = merge(cms.article, cms.gallery, cms.link, cms.video) %}
+  {% set editorial = merge(cms.article, cms.gallery, cms.reads, cms.video, cms.interview) %}
   {% set editorial = editorial|sort('publish_date', true) %}
   {# INFINITE SCROLL BY 10 #}
   {% set editorial = paginate(editorial, 10) %}
 
+
+
   <ul class="home-feed js-paginate" data-next-page="{{ getPageUrl(getCurPage() + 1) }}" data-max-page="{{ getPageUrl(getMaxPage()) }}" data-remove-first="true">
+
+    {% for item in editorial %}
+      {# GALLERY #}
+      {# GALLERY #}
+      {# GALLERY #}
+      {% if item._type == "gallery" %}
+        {% include "templates/partials/li_gallery.html" %}
+      {# ARTICLE #}
+      {# ARTICLE #}
+      {# ARTICLE #}
+      {% elseif item._type == "article" %}
+        {% include "templates/partials/li_article.html" %}
+      {# INTERVIEW #}
+      {# INTERVIEW #}
+      {# INTERVIEW #}
+        {% elseif item._type == "interview" %}
+      {% include "templates/partials/li_interview.html" %}
+      {# LINK #}
+      {# LINK #}
+      {# LINK #}
+      {% elseif item._type == "reads" %}
+        {% include "templates/partials/li_link.html" %}
+      {# VIDEO #}
+      {# VIDEO #}
+      {# VIDEO #}
+      {% elseif item._type == "video" %}
+        {% include "templates/partials/li_video.html" %}
+      {% endif %}
+    {% endfor %}
 
     {# TWITTER #}
     {# TWITTER #}
@@ -45,33 +77,8 @@
         </div>
       </li>
     {% endif %}
-
-    {% for item in editorial %}
-      {# GALLERY #}
-      {# GALLERY #}
-      {# GALLERY #}
-      {% if item._type == "gallery" %}
-        {% include "templates/partials/li_gallery.html" %}
-      {# ARTICLE #}
-      {# ARTICLE #}
-      {# ARTICLE #}
-      {% elseif item._type == "article" %}
-        {% include "templates/partials/li_article.html" %}
-      {# LINK #}
-      {# LINK #}
-      {# LINK #}
-      {% elseif item._type == "link" %}
-        {% include "templates/partials/li_link.html" %}
-      {# VIDEO #}
-      {# VIDEO #}
-      {# VIDEO #}
-      {% elseif item._type == "video" %}
-        {% include "templates/partials/li_video.html" %}
-      {% endif %}
-    {% endfor %}
   </ul>
-  <div id="js-spinner" class="wy-spinner" style="display: none;"></div>
-</div>
-{% endblock %}
+
+
 
 {% block scripts_extra %}{% endblock %}

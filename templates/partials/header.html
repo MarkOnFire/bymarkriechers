@@ -1,26 +1,43 @@
 <header>
   <nav>
     <ul class="name">
-      <li class="circle"><a href="/">{{ cms.aboutme.initials }}</a></li>
+      <li><a href="/"><img src="{{ cms.aboutme.logo|imageSize(50, 'auto') }}" /></a></li>
+
+      {% if !cms.aboutme.logo %}
       <li><a href="/">{{ cms.aboutme.name }}</a></li>
+      {% endif %}
+
       {% if cms.aboutme.twitter %}
-        <li><a href="http://www.twitter.com/{{ cms.twitter.name }}">@{{ cms.aboutme.twitter }}</a></li>
+        <li><a href="http://www.twitter.com/{{ cms.twitter.name }}" target="_blank">@{{ cms.aboutme.twitter }}</a></li>
       {% endif %}
+
+      {% if cms.aboutme.patreon_link %}
+        <li><a href="{{ cms.aboutme.patreon_link }}" target="_blank">support on patreon</a></li>
+      {% endif %}
+
     </ul>
+
     <ul class="menu">
-      <li><a href="/aboutme/">About</a></li>
-      {% if cms.article|size > 0 %}
-        <li><a href="/article/">Blog</a></li>
+      <li><a href="/"><img src="/static/images/50-nav-spacer.png" /></a></li>
+      <li><a href="/aboutme/">read_me</a></li>
+      {% if cms.interview|size > 0 %}
+        <li><a href="/interview/">interviews</a></li>
       {% endif %}
+      {% if cms.article|size > 0 %}
+        <li><a href="/article/">essays</a></li>
+      {% endif %}
+      {% if cms.reads|size > 0 %}
+        <li><a href="/reads/">elsewhere</a></li>
+      {% endif %}
+      <!--unclear if these will be in use on DD-->
+      <!--
       {% if cms.gallery|size > 0 %}
         <li><a href="/gallery/">Photos</a></li>
       {% endif %}
       {% if cms.video|size > 0 %}
         <li><a href="/video/">Video</a></li>
       {% endif %}
-      {% if cms.reads|size > 0 %}
-        <li><a href="/reads/">Clippings</a></li>
-      {% endif %}
+    -->
       <li class="search-icon"><a class="fa fa-search"></a></li>
       <li class="search-form">
         <form action="/search-results/" method="get" data-search-index="false">

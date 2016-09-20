@@ -1,0 +1,102 @@
+{# ------------------------------------------------------- #}
+{# INDIVIDUAL VIEW FOR EACH game #}
+{# This page can use any data from http:localhost:2000/cms/#/form/game/ #}
+{# Webhook uses the SWIG.js (like Djagno/Twig) templating system. Their documentation is here: #}
+{# http://paularmstrong.github.io/swig/docs/tags/ #}
+{# Learn about calling data into Webhook pages here: #}
+{# http://www.webhook.com/docs/template-rules-and-filters/ #}
+{# ------------------------------------------------------- #}
+{# Confused what extends and blocks do? Watch a primer: #}
+{# http://www.webhook.com/docs/template-inheritance-blocks/ #}
+{% extends "templates/partials/base.html" %}
+{# This sets our page <title>. It will append this game's name to the site title defined in base.html #}
+{% block title %}{% parent %} - {{ item.name }}{% endblock %}
+{% block content %}
+  <p><a href="{{ url('game') }}">View a list of all game</a></p>
+  <h1>{{ item.name }}</h1>
+  <ul>
+      <li>
+        <strong>Name: </strong>
+        {{ item.name }}
+      </li>
+      <li>
+        <strong>Create Date: </strong>
+        {# Format the date. You can use PHP's date function to format as needed. http://php.net/manual/en/function.date.php #}
+        {{ item.create_date|date('F d Y') }}
+      </li>
+      <li>
+        <strong>Last Updated: </strong>
+        {# Format the date. You can use PHP's date function to format as needed. http://php.net/manual/en/function.date.php #}
+        {{ item.last_updated|date('F d Y') }}
+      </li>
+      <li>
+        <strong>Publish Date: </strong>
+        {# Format the date. You can use PHP's date function to format as needed. http://php.net/manual/en/function.date.php #}
+        {{ item.publish_date|date('F d Y') }}
+      </li>
+      <li>
+        <strong>Paragraph text: </strong>
+        {{ item.paragraph_text }}
+      </li>
+      <li>
+        <strong>Glitchies: </strong>
+        {# Loop of your Repeatable Form items. Remember, you can sort the order in your CMS if you need. #}
+        <ul>
+        {% for row in item.glitchies %}
+            <li>
+              <strong>Image: </strong>
+              {# You can pull out a lot more information from the image property. Info here: #}
+                {# http://www.webhook.com/docs/widget-template-reference/#image #}
+                <img src="{{ row.image|imageSize(200, 200) }}" />
+            </li>
+        {% endfor %}
+        </ul>
+      </li>
+      <li>
+        <strong>Normals: </strong>
+        {# Loop of your Repeatable Form items. Remember, you can sort the order in your CMS if you need. #}
+        <ul>
+        {% for row in item.normals %}
+            <li>
+              <strong>Image: </strong>
+              {# You can pull out a lot more information from the image property. Info here: #}
+                {# http://www.webhook.com/docs/widget-template-reference/#image #}
+                <img src="{{ row.image|imageSize(200, 200) }}" />
+            </li>
+        {% endfor %}
+        </ul>
+      </li>
+      <li>
+        <strong>Preview URL: </strong>
+        {{ item.preview_url }}
+      </li>
+      <li>
+        <strong>Related Interview: </strong>
+        {# Relationship. Note that use the label you set for the relation, not the content-type name. #}
+        {% for relation in item.related_interview %}
+          {# You can ouput more than just the name. Feel free to output more fields from the CMS. #}
+          <a href="{{ url(relation) }}">{{ relation.name }}</a>{% if not loop.last %},{% endif %}
+        {% endfor %}
+      </li>
+      <li>
+        <strong>Related Story: </strong>
+        {# Relationship. Note that use the label you set for the relation, not the content-type name. #}
+        {% for relation in item.related_story %}
+          {# You can ouput more than just the name. Feel free to output more fields from the CMS. #}
+          <a href="{{ url(relation) }}">{{ relation.name }}</a>{% if not loop.last %},{% endif %}
+        {% endfor %}
+      </li>
+      <li>
+        <strong>Related Reads: </strong>
+        {# Relationship. Note that use the label you set for the relation, not the content-type name. #}
+        {% for relation in item.related_reads %}
+          {# You can ouput more than just the name. Feel free to output more fields from the CMS. #}
+          <a href="{{ url(relation) }}">{{ relation.name }}</a>{% if not loop.last %},{% endif %}
+        {% endfor %}
+      </li>
+      <li>
+        <strong>Slug: </strong>
+        {{ item.slug }}
+      </li>
+  </ul>
+{% endblock %}
